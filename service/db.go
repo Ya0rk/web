@@ -1,11 +1,12 @@
-package model
+package service
 
 import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"time"
-	"web/utils"
+	"web/model"
+	"web/utils/config"
 )
 
 var db *gorm.DB
@@ -13,11 +14,11 @@ var err error
 
 func InitDb() {
 	db, err = gorm.Open(mysql.Open(fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
-		utils.DbUser,
-		utils.DbPassword,
-		utils.DbHost,
-		utils.DbPort,
-		utils.Dbname,
+		config.DbUser,
+		config.DbPassword,
+		config.DbHost,
+		config.DbPort,
+		config.Dbname,
 	)), &gorm.Config{})
 
 	if err != nil {
@@ -25,6 +26,7 @@ func InitDb() {
 	}
 
 	// todo:数据库迁移，创建需要的表
+	db.AutoMigrate(&model.User{})
 
 	sqlDB, err := db.DB()
 	if err != nil {

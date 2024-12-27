@@ -1,4 +1,4 @@
-package utils
+package config
 
 import (
 	"fmt"
@@ -8,6 +8,7 @@ import (
 var (
 	AppMode  string
 	HttpPort string
+	JwtKey   string
 
 	Db         string
 	DbHost     string
@@ -32,13 +33,14 @@ func init() {
 func LoadServer(file *ini.File) {
 	AppMode = file.Section("server").Key("AppMode").MustString("debug")
 	HttpPort = file.Section("server").Key("HttpPort").MustString(":3000")
+	JwtKey = file.Section("server").Key("JwtKey").String()
 }
 
 func LoadData(file *ini.File) {
-	Db = file.Section("database").Key("Db").MustString("mysql")
+	Db = file.Section("database").Key("Db").String()
 	DbHost = file.Section("database").Key("DbHost").MustString("localhost")
 	DbPort = file.Section("database").Key("DbPort").MustString("3306")
-	DbUser = file.Section("database").Key("DbUser").MustString("admin")
-	DbPassword = file.Section("database").Key("DbPassword").MustString("123123")
-	Dbname = file.Section("database").Key("DbName").MustString("web")
+	DbUser = file.Section("database").Key("DbUser").String()
+	DbPassword = file.Section("database").Key("DbPassword").String()
+	Dbname = file.Section("database").Key("DbName").String()
 }

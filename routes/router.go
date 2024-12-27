@@ -2,17 +2,20 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"web/utils"
+	v1 "web/api/v1"
+	"web/utils/config"
 )
 
 func InitRouter() {
-	gin.SetMode(utils.AppMode)
-	router := gin.New()
-	router.Use(gin.Recovery())
+	gin.SetMode(config.AppMode)
+	r := gin.New()
+	r.Use(gin.Recovery())
 
 	// 管理路由组
-	r := router.Group("api/v1")
+	router := r.Group("api/v1")
 	{
-		r.POST("/register")
+		router.POST("/register", v1.RegisterApi)
+		router.POST("/login", v1.LoginApi)
 	}
+	r.Run(config.HttpPort)
 }
