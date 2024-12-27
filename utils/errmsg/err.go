@@ -29,6 +29,7 @@ const (
 
 	//服务器错误
 	ERROR_SEND_VERIFICATION_CODE = 510
+	ERROR_RECOVER_PASSWD_FAIL    = 511
 )
 
 var msg = map[int]string{
@@ -54,6 +55,7 @@ var msg = map[int]string{
 	ERROR_EMAIL_TYPE:    "邮箱格式不正确",
 
 	ERROR_SEND_VERIFICATION_CODE: "验证码发送失败",
+	ERROR_RECOVER_PASSWD_FAIL:    "密码修改失败",
 }
 
 func GetErrMsg(code int) string {

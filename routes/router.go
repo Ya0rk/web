@@ -17,7 +17,7 @@ func InitRouter() {
 	auth := r.Group("/api/v1")
 	auth.Use(middleware.JwtToken())
 	{
-		auth.POST("recover/passwd", v1.RecoverPasswdApi)
+
 	}
 
 	// 不需要鉴权
@@ -27,6 +27,7 @@ func InitRouter() {
 		public.POST("login/passwd", v1.LoginByPasswdApi)
 		public.POST("login/sendVerCode", v1.SendVerCodeApi)
 		public.POST("login/email", v1.LoginByEmailApi)
+		public.POST("recover/passwd", v1.RecoverPasswdApi)
 	}
 	r.Run(config.HttpPort)
 }

@@ -6,7 +6,7 @@ import (
 )
 
 // 密码方式登录验证
-func LoginByPasswd(name string, password string) int {
+func CheckPasswd(name string, password string) int {
 	var user model.User
 	db.Where("username = ?", name).First(&user)
 	if user.ID == 0 {
@@ -19,7 +19,7 @@ func LoginByPasswd(name string, password string) int {
 }
 
 // 邮箱验证码方式登录验证
-func LoginByEmail(email string, verificationCode string) int {
+func CheckEmailCode(email string, verificationCode string) int {
 	// 判断邮箱是否存在
 	if ok := IsEmailExist(email); !ok {
 		return errmsg.ERROR_EMAIL_NOT_EXIST

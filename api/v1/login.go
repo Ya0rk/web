@@ -15,7 +15,7 @@ func LoginByPasswdApi(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&data)
 	if err != nil {
-		panic("Binding Error")
+		panic(err.Error())
 	}
 
 	// 长度检查
@@ -28,7 +28,7 @@ func LoginByPasswdApi(c *gin.Context) {
 		goto Response
 	}
 
-	code = service.LoginByPasswd(data.Username, data.Password)
+	code = service.CheckPasswd(data.Username, data.Password)
 
 Response:
 	c.JSON(http.StatusOK, gin.H{
@@ -51,12 +51,13 @@ func LoginByEmailApi(c *gin.Context) {
 	if ok := service.IsValidEmail(data.Email); !ok {
 		code = errmsg.ERROR_EMAIL_TYPE
 		goto Response
-	} else if len(data.VerificationCode) < 6 {
+	}
+	if len(data.VerificationCode) != 6 {
 		code = errmsg.ERROR_VERIFICATIONCODE_LEN
 		goto Response
 	}
 
-	code = service.LoginByEmail(data.Email, data.VerificationCode)
+	code = service.CheckEmailCode(data.Email, data.VerificationCode)
 
 Response:
 	c.JSON(http.StatusOK, gin.H{

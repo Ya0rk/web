@@ -32,6 +32,13 @@ type UserEmail struct {
 	Email string `gorm:"type:varchar(255);not null" json:"email" validate:"required,max=255" label:"邮箱"`
 }
 
+type RecoverPasswd struct {
+	gorm.Model
+	Email            string `gorm:"type:varchar(255);not null" json:"email" validate:"required,max=255" label:"邮箱"`
+	Password         string `gorm:"type:varchar(20);not null" json:"password" validate:"required,min=6,max=20" label:"密码"`
+	VerificationCode string `gorm:"type:char(6);not null" json:"verificationCode" validate:"required,regexp=^[0-9]{6}$" label:"验证码"`
+}
+
 /*
 密码加密 ： scrypt加密方法
 https://pkg.go.dev/golang.org/x/crypto/scrypt
@@ -41,6 +48,10 @@ https://pkg.go.dev/golang.org/x/crypto/scrypt
 func (u *User) BeforeSave(*gorm.DB) error {
 	u.Password = ScryptPw(u.Password)
 	u.Email = ScryptPw(u.Email)
+	return nil
+}
+func (u *User) BeforeUpdate(*gorm.DB) error {
+	u.Password = ScryptPw(u.Password)
 	return nil
 }
 

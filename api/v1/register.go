@@ -32,8 +32,6 @@ Response:
 		// 注册之后创建新用户
 		code = service.CreateUser(&data)
 		//println("b:", code)
-	} else {
-		data = model.UserRegister{} // 返回一个空的data，避免泄露其他user信息
 	}
 
 	c.JSON(http.StatusOK, gin.H{
