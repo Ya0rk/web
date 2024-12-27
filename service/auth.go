@@ -5,7 +5,8 @@ import (
 	"web/utils/errmsg"
 )
 
-func Login(name string, password string) int {
+// 密码方式登录验证
+func LoginByPasswd(name string, password string) int {
 	var user model.User
 	db.Where("username = ?", name).First(&user)
 	if user.ID == 0 {
@@ -17,6 +18,21 @@ func Login(name string, password string) int {
 	return errmsg.SUCCESS
 }
 
+// 邮箱验证码方式登录验证
+func LoginByEmail(email string, verificationCode string) int {
+	// 判断邮箱是否存在
+	if ok := IsEmailExist(email); !ok {
+		return errmsg.ERROR_EMAIL_NOT_EXIST
+	}
+	// 判断验证码是否正确
+	if ok := NewEmailService().VerifyVerificationCode(email, verificationCode); !ok {
+		return errmsg.ERROR_VERIFICATIONCODE
+	}
+
+	return errmsg.SUCCESS
+}
+
+// 注册创建用户，使用邮箱方式
 func CreateUser(data *model.UserRegister) int {
 	var user = model.User{
 		Username: data.Username,
@@ -25,6 +41,7 @@ func CreateUser(data *model.UserRegister) int {
 	}
 	err := db.Create(&user).Error
 	if err != nil {
+		println(err.Error())
 		return errmsg.ERROR // 500
 	}
 	return errmsg.SUCCESS // 200

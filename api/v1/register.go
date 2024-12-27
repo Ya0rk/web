@@ -24,11 +24,14 @@ func RegisterApi(c *gin.Context) {
 	}
 
 	// 向邮箱发送验证信息
-	code = service.SendVerifiMsg(data.Email)
+	code = service.NewEmailService().SendVerificationCode(data.Email)
+	//println("a:", code)
 
 Response:
 	if code == errmsg.SUCCESS {
+		// 注册之后创建新用户
 		code = service.CreateUser(&data)
+		//println("b:", code)
 	} else {
 		data = model.UserRegister{} // 返回一个空的data，避免泄露其他user信息
 	}

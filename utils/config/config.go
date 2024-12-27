@@ -16,6 +16,9 @@ var (
 	DbUser     string
 	DbPassword string
 	Dbname     string
+
+	QQEmail   string
+	QQGenCode string
 )
 
 func init() {
@@ -28,6 +31,7 @@ func init() {
 	// 加载配置文件，读取其中的值设置全局变量
 	LoadServer(file)
 	LoadData(file)
+	LoadEmail(file)
 }
 
 func LoadServer(file *ini.File) {
@@ -43,4 +47,9 @@ func LoadData(file *ini.File) {
 	DbUser = file.Section("database").Key("DbUser").String()
 	DbPassword = file.Section("database").Key("DbPassword").String()
 	Dbname = file.Section("database").Key("DbName").String()
+}
+
+func LoadEmail(file *ini.File) {
+	QQEmail = file.Section("email").Key("QQEmail").String()
+	QQGenCode = file.Section("email").Key("QQGenCode").String()
 }

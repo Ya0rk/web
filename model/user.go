@@ -21,6 +21,17 @@ type UserRegister struct {
 	Email    string `gorm:"type:varchar(255);not null" json:"email" validate:"required,max=255" label:"邮箱"`
 }
 
+type UserEmailLogin struct {
+	gorm.Model
+	Email            string `gorm:"type:varchar(255);not null" json:"email" validate:"required,max=255" label:"邮箱"`
+	VerificationCode string `gorm:"type:char(6);not null" json:"verificationCode" validate:"required,regexp=^[0-9]{6}$" label:"验证码"`
+}
+
+type UserEmail struct {
+	gorm.Model
+	Email string `gorm:"type:varchar(255);not null" json:"email" validate:"required,max=255" label:"邮箱"`
+}
+
 /*
 密码加密 ： scrypt加密方法
 https://pkg.go.dev/golang.org/x/crypto/scrypt

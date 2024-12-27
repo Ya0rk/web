@@ -8,7 +8,8 @@ import (
 	"web/utils/errmsg"
 )
 
-func LoginApi(c *gin.Context) {
+// 使用密码验证登录
+func LoginByPasswdApi(c *gin.Context) {
 	var data model.User
 	var code int
 
@@ -27,7 +28,35 @@ func LoginApi(c *gin.Context) {
 		goto Response
 	}
 
-	code = service.Login(data.Username, data.Password)
+	code = service.LoginByPasswd(data.Username, data.Password)
+
+Response:
+	c.JSON(http.StatusOK, gin.H{
+		"code":    code,
+		"message": errmsg.GetErrMsg(code),
+	})
+}
+
+// 使用邮箱方式登录
+func LoginByEmailApi(c *gin.Context) {
+	var data model.UserEmailLogin
+	var code int
+
+	err := c.ShouldBindJSON(&data)
+	if err != nil {
+		panic("Binding Error")
+	}
+
+	// 长度检查
+	if ok := service.IsValidEmail(data.Email); !ok {
+		code = errmsg.ERROR_EMAIL_TYPE
+		goto Response
+	} else if len(data.VerificationCode) < 6 {
+		code = errmsg.ERROR_VERIFICATIONCODE_LEN
+		goto Response
+	}
+
+	code = service.LoginByEmail(data.Email, data.VerificationCode)
 
 Response:
 	c.JSON(http.StatusOK, gin.H{
