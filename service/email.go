@@ -13,7 +13,7 @@ import (
 
 var (
 	// 缓存中的验证代码将在创建后5分钟内有效，且每隔10分钟进行一次清理。
-	verificationCodeCache = cache.New(5*time.Minute, 10*time.Minute)
+	verificationCodeCache = cache.New(2*time.Minute, 5*time.Minute)
 )
 
 type EmailService interface {
@@ -64,7 +64,7 @@ func (e *emailService) SendVerificationCode(to string) int {
 func (e *emailService) sendVerificationCode(to string, code string) error {
 	// 创建一个新的邮件实例
 	em := email.NewEmail()
-	em.From = "Yyyyyyy <3594781281@qq.com>"
+	em.From = "Admin <3594781281@qq.com>"
 	em.To = []string{to}
 	em.Subject = "Verification Code"
 	// 设置邮件的HTML内容
@@ -116,6 +116,9 @@ func (e *emailService) VerifyVerificationCode(email string, code string) bool {
 	if cachedCodeStr != code {
 		return false
 	}
+
+	// 使用一次验证码后就将其从cache中删除，保证验证码在2分钟内只能使用一次
+	verificationCodeCache.Delete(email)
 
 	return true
 }

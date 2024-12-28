@@ -3,6 +3,7 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"web/middleware"
 	"web/model"
 	"web/service"
 	"web/utils/errmsg"
@@ -12,6 +13,7 @@ import (
 func LoginByPasswdApi(c *gin.Context) {
 	var data model.User
 	var code int
+	var token string
 
 	err := c.ShouldBindJSON(&data)
 	if err != nil {
@@ -29,10 +31,16 @@ func LoginByPasswdApi(c *gin.Context) {
 	}
 
 	code = service.CheckPasswd(data.Username, data.Password)
+	if code == errmsg.SUCCESS {
+		token, code = middleware.SetToken(data.Username)
+	} else {
+		token = ""
+	}
 
 Response:
 	c.JSON(http.StatusOK, gin.H{
 		"code":    code,
+		"token":   token,
 		"message": errmsg.GetErrMsg(code),
 	})
 }
@@ -41,6 +49,8 @@ Response:
 func LoginByEmailApi(c *gin.Context) {
 	var data model.UserEmailLogin
 	var code int
+	var token string
+	var username string
 
 	err := c.ShouldBindJSON(&data)
 	if err != nil {
@@ -57,11 +67,17 @@ func LoginByEmailApi(c *gin.Context) {
 		goto Response
 	}
 
-	code = service.CheckEmailCode(data.Email, data.VerificationCode)
+	code, username = service.CheckEmailCode(data.Email, data.VerificationCode)
+	if code == errmsg.SUCCESS {
+		token, code = middleware.SetToken(username)
+	} else {
+		token = ""
+	}
 
 Response:
 	c.JSON(http.StatusOK, gin.H{
 		"code":    code,
+		"token":   token,
 		"message": errmsg.GetErrMsg(code),
 	})
 }

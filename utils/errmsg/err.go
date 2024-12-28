@@ -27,6 +27,9 @@ const (
 
 	ERROR_VERIFICATIONCODE = 425
 
+	ERROR_CARD_MSG = 426
+	ERROR_PARAM    = 427
+
 	//服务器错误
 	ERROR_SEND_VERIFICATION_CODE = 510
 	ERROR_RECOVER_PASSWD_FAIL    = 511
@@ -47,6 +50,8 @@ var msg = map[int]string{
 	ERROR_EMAIL_NOT_EXIST:      "该邮箱不存在，请先注册",
 	ERROR_VERIFICATIONCODE_LEN: "验证码长度该为6",
 	ERROR_VERIFICATIONCODE:     "验证码已过期或已过期，请重新生成验证码",
+	ERROR_CARD_MSG:             "请按照格式填写名片信息",
+	ERROR_PARAM:                "不能小于0",
 
 	ERROR_EMAIL_USED:    "该邮箱已注册",
 	ERROR_USERNAME_USED: "该用户名已存在",

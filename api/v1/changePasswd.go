@@ -36,7 +36,7 @@ func RecoverPasswdApi(c *gin.Context) {
 		goto Response
 	}
 
-	code = service.CheckEmailCode(data.Email, data.VerificationCode)
+	code, _ = service.CheckEmailCode(data.Email, data.VerificationCode)
 	if code == errmsg.SUCCESS {
 		code = service.RecoverPasswd(data.Email, data.Password)
 	}

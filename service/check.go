@@ -15,6 +15,8 @@ func Check(data model.UserRegister) int {
 		return errmsg.ERROR_PASSWORD_LEN
 	case !IsValidEmail(data.Email):
 		return errmsg.ERROR_EMAIL_TYPE
+	case len(data.VerificationCode) != 6:
+		return errmsg.ERROR_VERIFICATIONCODE_LEN
 	}
 
 	// 重名 + 邮箱已注册检查

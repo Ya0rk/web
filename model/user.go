@@ -16,9 +16,10 @@ type User struct {
 
 type UserRegister struct {
 	gorm.Model
-	Username string `gorm:"type:varchar(20);not null" json:"username" validate:"required,min=4,max=20" label:"用户名"`
-	Password string `gorm:"type:varchar(20);not null" json:"password" validate:"required,min=6,max=20" label:"密码"`
-	Email    string `gorm:"type:varchar(255);not null" json:"email" validate:"required,max=255" label:"邮箱"`
+	Username         string `gorm:"type:varchar(20);not null" json:"username" validate:"required,min=4,max=20" label:"用户名"`
+	Password         string `gorm:"type:varchar(20);not null" json:"password" validate:"required,min=6,max=20" label:"密码"`
+	Email            string `gorm:"type:varchar(255);not null" json:"email" validate:"required,max=255" label:"邮箱"`
+	VerificationCode string `gorm:"type:char(6);not null" json:"verificationCode" validate:"required,regexp=^[0-9]{6}$" label:"验证码"`
 }
 
 type UserEmailLogin struct {

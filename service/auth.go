@@ -19,17 +19,17 @@ func CheckPasswd(name string, password string) int {
 }
 
 // 邮箱验证码方式登录验证
-func CheckEmailCode(email string, verificationCode string) int {
+func CheckEmailCode(email string, verificationCode string) (int, string) {
 	// 判断邮箱是否存在
 	if ok := IsEmailExist(email); !ok {
-		return errmsg.ERROR_EMAIL_NOT_EXIST
+		return errmsg.ERROR_EMAIL_NOT_EXIST, ""
 	}
 	// 判断验证码是否正确
 	if ok := NewEmailService().VerifyVerificationCode(email, verificationCode); !ok {
-		return errmsg.ERROR_VERIFICATIONCODE
+		return errmsg.ERROR_VERIFICATIONCODE, ""
 	}
 
-	return errmsg.SUCCESS
+	return errmsg.SUCCESS, getNameByEmail(email)
 }
 
 // 注册创建用户，使用邮箱方式
@@ -45,4 +45,11 @@ func CreateUser(data *model.UserRegister) int {
 		return errmsg.ERROR // 500
 	}
 	return errmsg.SUCCESS // 200
+}
+
+// 通过email获取到username
+func getNameByEmail(email string) string {
+	var user model.User
+	db.Where("email = ?", email).First(&user)
+	return user.Username
 }

@@ -27,6 +27,7 @@ func InitDb() {
 
 	// todo:数据库迁移，创建需要的表
 	db.AutoMigrate(&model.User{})
+	db.AutoMigrate(&model.UserCard{})
 
 	sqlDB, err := db.DB()
 	if err != nil {

@@ -17,7 +17,7 @@ func InitRouter() {
 	auth := r.Group("/api/v1")
 	auth.Use(middleware.JwtToken())
 	{
-
+		auth.POST("user/createCard", v1.CreateCardApi)
 	}
 
 	// 不需要鉴权
@@ -28,6 +28,7 @@ func InitRouter() {
 		public.POST("login/sendVerCode", v1.SendVerCodeApi)
 		public.POST("login/email", v1.LoginByEmailApi)
 		public.POST("recover/passwd", v1.RecoverPasswdApi)
+		public.GET("user/teammates", v1.GetCardsApi)
 	}
 	r.Run(config.HttpPort)
 }
